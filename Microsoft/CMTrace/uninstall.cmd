@@ -1,0 +1,1 @@
+del "c:\Sarpsborg kommune\Tools\cmtrace.exe"
