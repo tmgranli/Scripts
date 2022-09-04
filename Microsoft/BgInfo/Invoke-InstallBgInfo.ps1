@@ -48,7 +48,7 @@ function Write-Log {
  }
 
 $StartDTM = (Get-Date)
-$LogPS = "C:\Sarpsborg kommune\Logs\Transcript-Log.log"
+$LogPS = "C:\Sarpsborg kommune\Logs\BGInfo-TranscriptLog.log"
 Start-Transcript $LogPS | Out-Null
 
 Try {
@@ -63,7 +63,10 @@ Try {
     Copy-Item –Path ".\custom_kiosk.bgi" –Destination "C:\Program Files\BGInfo\custom_kiosk.bgi" -Verbose -ErrorAction Stop
     Write-Log -Message 'custom_kiosk.bgi have succesfully been copied to C:\Program Files\BGInfo64' -Severity Information -Verbose
 
-    Copy-Item –Path ".\custom_kiosk.bgi" –Destination "C:\Program Files\BGInfo\custom_kiosk.bgi" -Verbose -ErrorAction Stop
+    Copy-Item –Path ".\MacAddress.vbs" –Destination "C:\Program Files\BGInfo\MacAddress.vbs" -Verbose -ErrorAction Stop
+    Write-Log -Message 'BGInfo config file have succesfully been copied: C:\Program Files\BGInfo\custom_kiosk.bgi' -Severity Information -Verbose
+
+    Copy-Item –Path ".\ActiveIP.vbs" –Destination "C:\Program Files\BGInfo\ActiveIP.vbs" -Verbose -ErrorAction Stop
     Write-Log -Message 'BGInfo config file have succesfully been copied: C:\Program Files\BGInfo\custom_kiosk.bgi' -Severity Information -Verbose
     
     $Shell = New-Object –ComObject ("WScript.Shell")
