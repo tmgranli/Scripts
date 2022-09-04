@@ -39,14 +39,12 @@ $scrambledpassword=($passwordarray | Get-Random -Count 20) -join ''
 $scrambledpassword
 }
 
-
 function Get-TimeStamp {
     
     return "[{0:HH:mm:ss}]" -f (Get-Date)
         
 }
     
-       
 #Prepare logging and error handling
 clear-host
     
@@ -61,7 +59,6 @@ $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 $DefaultUsername = "KIOSK"
 $ConfigLog = 'C:\Sarpsborg kommune\Logs\ConfigLog.txt'
 $DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_v3.txt'
-
 
 Try {
     Write-host "Start KIOSK configuration" -Verbose -BackgroundColor Cyan -ForegroundColor Black
