@@ -36,9 +36,7 @@ Start-Transcript $LogPS | Out-Null
     
 #Needed variables
 Write-host "Read variables" -Verbose -BackgroundColor Cyan -ForegroundColor Black
-$username = "KIOSK"
-$RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-$DefaultUsername = "KIOSK"
+
 $ConfigLog = 'C:\Sarpsborg kommune\Logs\ConfigLog.txt'
 $DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_v3.txt'
 
