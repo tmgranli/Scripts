@@ -58,16 +58,16 @@ Try {
     New-Item –ItemType Directory –Force –Path "c:\Program Files\BGInfo"
     Write-Log -Message 'Status: BgInfo folder Created' -Severity Information -Verbose
 
-    Copy-Item –Path "$PSScriptRoot\Bginfo64.exe" –Destination "C:\Program Files\BGInfo\Bginfo64.exe"
+    Copy-Item –Path ".\Bginfo64.exe" –Destination "C:\Program Files\BGInfo\Bginfo64.exe"
     Write-Log -Message 'Bginfo64.exe have succesfully been copied to C:\Program Files\BGInfo64' -Severity Information -Verbose
 
-    Copy-Item –Path "$PSScriptRoot\custom.bgi" –Destination "C:\Program Files\BGInfo\custom.bgi"
-    Write-Log -Message 'BGInfo config file have succesfully been copied: C:\Program Files\BGInfo\custom.bgi' -Severity Information -Verbose
+    Copy-Item –Path ".\custom_kiosk.bgi" –Destination "C:\Program Files\BGInfo\custom_kiosk.bgi"
+    Write-Log -Message 'BGInfo config file have succesfully been copied: C:\Program Files\BGInfo\custom_kiosk.bgi' -Severity Information -Verbose
     
     $Shell = New-Object –ComObject ("WScript.Shell")
     $ShortCut = $Shell.CreateShortcut("C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\BGInfo.lnk")
     $ShortCut.TargetPath="`"C:\Program Files\BGInfo\Bginfo64.exe`""
-    $ShortCut.Arguments="`"C:\Program Files\BGInfo\custom.bgi`" /timer:0 /silent /nolicprompt"
+    $ShortCut.Arguments="`"C:\Program Files\BGInfo\custom_kiosk.bgi`" /timer:0 /silent /nolicprompt"
     $ShortCut.IconLocation = "Bginfo64.exe, 0";
     $ShortCut.Save()
     Write-Log -Message 'BGInfo shortcreated under StartUp folder. If this fails bginfo will not start automatically' -Severity Information -Verbose
