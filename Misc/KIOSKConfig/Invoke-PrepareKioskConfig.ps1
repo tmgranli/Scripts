@@ -46,8 +46,7 @@ function Get-TimeStamp {
         
 }
     
-    
-    
+       
 #Prepare logging and error handling
 clear-host
     
@@ -127,7 +126,6 @@ Try {
 }
     
 Catch {
-    
         
     Write-Host "Someting went wrong, see logfile ($LogPS)  for more information" -BackgroundColor Black -ForegroundColor Red
     Write-Error "$_"
