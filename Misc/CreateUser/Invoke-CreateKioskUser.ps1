@@ -60,7 +60,7 @@ $DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskUserCreated_v1.txt
 Try {
 
     #Create local user for KIOSK
-    New-LocalUser -Name $DefaultUsername -AccountNeverExpires:$true -UserMayNotChangePassword:$true -PasswordNeverExpires:$true -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -FullName $DefaultUsername -Description "Local KIOSK User"
+    New-LocalUser -Name $DefaultUsername -AccountNeverExpires:$true -UserMayNotChangePassword:$true -PasswordNeverExpires:$true -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -FullName $DefaultUsername -Description "Local KIOSK User" -ErrorAction Stop -Verbose
     Add-Content $ConfigLog "$(Get-TimeStamp) - Local 'KIOSK' user have been created." -Verbose
     Write-Verbose "User: $DefaultUsername was created" -Verbose
      
@@ -78,13 +78,7 @@ Try {
 
     Add-Content $ConfigLog "$(Get-TimeStamp) - Local 'KIOSK' user is configured for AutoLogon."
     Write-host "KIOSK configuration finish" -Verbose -BackgroundColor Cyan -ForegroundColor Black
-
-    $DUNInfo = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' | Select-Object DefaultUserName -Verbose -InformationAction Continue
-    $DPInfo = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' | Select-Object DefaultPassword -Verbose
-    $ADLInfo = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' | Select-Object AutoAdminLogon -Verbose
-    Add-Content $ConfigLog "$DUNInfo, $DPInfo, $ADLInfo"
-
-        
+       
     New-Item -Path $DetectionMethod -Force -Verbose -ErrorAction Stop #Versiosnumber needs to be updated each change
     
     Exit 0
