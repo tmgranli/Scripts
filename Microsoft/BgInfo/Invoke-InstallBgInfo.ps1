@@ -19,6 +19,7 @@
     
     Version history:
     1.0.0 - (2022-04-09) Script created
+    1.0.1 - (2022-05-09) Changed path.
 
 #>    
 function Get-TimeStamp {
@@ -54,19 +55,19 @@ Start-Transcript $LogPS | Out-Null
 Try {
     Write-Log -Message 'Status: Installation of BgInfo - Started' -Severity Information -Verbose
     
-    New-Item –ItemType Directory –Force –Path "c:\Program Files\BGInfo" -Verbose -ErrorAction Stop
+    New-Item –ItemType Directory –Force –Path 'C:\Program Files\BGInfo' -Verbose -ErrorAction Stop
     Write-Log -Message 'Status: BgInfo folder Created' -Severity Information -Verbose
 
-    Copy-Item –Path ".\Bginfo64.exe" –Destination "C:\Program Files\BGInfo\Bginfo64.exe" -Verbose -ErrorAction Stop
+    Copy-Item –Path ".\Bginfo64.exe" –Destination 'C:\Program Files\BGInfo\Bginfo64.exe' -Verbose -ErrorAction Stop
     Write-Log -Message 'Bginfo64.exe have succesfully been copied to C:\Program Files\BGInfo64' -Severity Information -Verbose
 
-    Copy-Item –Path ".\custom_kiosk.bgi" –Destination "C:\Program Files\BGInfo\custom_kiosk.bgi" -Verbose -ErrorAction Stop
+    Copy-Item –Path ".\custom_kiosk.bgi" –Destination 'C:\Program Files\BGInfo\custom_kiosk.bgi' -Verbose -ErrorAction Stop
     Write-Log -Message 'custom_kiosk.bgi have succesfully been copied to C:\Program Files\BGInfo64' -Severity Information -Verbose
 
-    Copy-Item –Path ".\MacAddress.vbs" –Destination "C:\Program Files\BGInfo\MacAddress.vbs" -Verbose -ErrorAction Stop
+    Copy-Item –Path ".\MacAddress.vbs" –Destination 'C:\Program Files\BGInfo\MacAddress.vbs' -Verbose -ErrorAction Stop
     Write-Log -Message 'BGInfo config file have succesfully been copied: C:\Program Files\BGInfo\custom_kiosk.bgi' -Severity Information -Verbose
 
-    Copy-Item –Path ".\ActiveIP.vbs" –Destination "C:\Program Files\BGInfo\ActiveIP.vbs" -Verbose -ErrorAction Stop
+    Copy-Item –Path ".\ActiveIP.vbs" –Destination 'C:\Program Files\BGInfo\ActiveIP.vbs' -Verbose -ErrorAction Stop
     Write-Log -Message 'BGInfo config file have succesfully been copied: C:\Program Files\BGInfo\custom_kiosk.bgi' -Severity Information -Verbose
     
     $Shell = New-Object –ComObject ("WScript.Shell")
