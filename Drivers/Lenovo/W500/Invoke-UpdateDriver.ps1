@@ -79,10 +79,10 @@ Try {
     New-Item -Path "c:\temp" -Name "wlan-drivers" -ItemType "directory" -force -Verbose  -ErrorAction Stop
     Write-LogEntry -Stamp -Value "wlan-drivers folder created"
 
-    Copy-Item .\drivers\* -Destination C:\temp\drivers -Recurse -Verbose -Force -ErrorAction Stop
+    Copy-Item .\drivers\* -Destination C:\temp\wlan-drivers\ -Recurse -Verbose -Force -ErrorAction Stop
     Write-LogEntry -Stamp -Value  "WLAN drivers copied to staging area"
 
-    c:\windows\sysnative\Pnputil.exe /add-driver ".\driver\*.inf" /install > c:\temp\w500-wlandriverpnputil.txt
+    c:\windows\sysnative\Pnputil.exe /add-driver "C:\temp\wlan-drivers\*.inf" /install > c:\temp\w500-wlandriverpnputil.txt
     Write-LogEntry -Stamp -Value "Drivers have been updated"
 
     #Create Detection Method  
