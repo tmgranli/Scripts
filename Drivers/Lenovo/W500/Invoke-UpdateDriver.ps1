@@ -15,6 +15,7 @@
     
     Version history:
     1.0.0 - (2022-09-20) Script created
+    1.0.1 - (2022-09-20) Added logging and driver info for WIFI
 #>    
 
 function Get-TimeStamp {
@@ -85,6 +86,9 @@ Try {
     c:\windows\sysnative\Pnputil.exe /add-driver "C:\temp\wlan-drivers\*.inf" /install > c:\temp\w500-wlandriverpnputil.txt
     Write-LogEntry -Stamp -Value "Drivers have been updated"
 
+    Get-NetAdapter | Select-Object Wi-Fi, Status, InterfaceDescription, DriverDate, DriverProvider, DriverVersion -Verbose | Out-File "C:\Sarpsborg kommune\Logs\WIFI-Info.txt"
+    Write-LogEntry -Stamp -Value "See driver info - C:\Sarpsborg kommune\Logs\WIFI-Info.txt"
+
     #Create Detection Method  
     $RegistryPath = "HKLM:\SOFTWARE\Sarpsborg kommune\Drivers" #Pek til ønsket lokasjon i registry
     $RegistryName = "WLANDriversUpdated" #Skriv inn ønsket navn på "Value".
@@ -104,6 +108,7 @@ Try {
 }
     
 Catch {
+
     #Error    
     Write-Host "Someting went wrong, see logfile ($LogPS)  for more information" -BackgroundColor Black -ForegroundColor Red
     Write-Error "$_"
