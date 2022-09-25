@@ -62,31 +62,33 @@ function Write-Log {
         Severity = $Severity
     } | Add-Content -Path $LogPath
 }
+function New-ScrambledPassword {
+    $uppercase = "ABCDEFGHKLMNOPRSTUVWXYZ".tochararray() 
+    $lowercase = "abcdefghiklmnoprstuvwxyz".tochararray() 
+    $number = "0123456789".tochararray() 
+    $special = "$%&/()=?}{@#*+!".tochararray() 
+
+    For ($i = 0; $i -le 1; $i++) {
+
+        $password = ($uppercase | Get-Random -count 3) -join ''
+        $password += ($lowercase | Get-Random -count 10) -join ''
+        $password += ($number | Get-Random -count 3) -join ''
+        $password += ($special | Get-Random -count 3) -join ''
+
+        $passwordarray = $password.tochararray() 
+        $scrambledpassword = ($passwordarray | Get-Random -Count 20) -join ''
+        $scrambledpassword
     
+    }
+    
+}
+
 #Variables
 $LogTS = "C:\Sarpsborg kommune\Logs\Invoke-PrepareKioskConfig-Transcript.log"
 $LogPath = "C:\Sarpsborg kommune\Logs\Invoke-PrepareKioskConfig.log"
 $DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_109.txt'
 $DefaultUsername = "KIOSK"
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
-
-#Random Password Generator
-$uppercase = "ABCDEFGHKLMNOPRSTUVWXYZ".tochararray() 
-$lowercase = "abcdefghiklmnoprstuvwxyz".tochararray() 
-$number = "0123456789".tochararray() 
-$special = "$%&/()=?}{@#*+!".tochararray() 
-
-For ($i = 0; $i -le 1; $i++) {
-
-    $password = ($uppercase | Get-Random -count 3) -join ''
-    $password += ($lowercase | Get-Random -count 10) -join ''
-    $password += ($number | Get-Random -count 3) -join ''
-    $password += ($special | Get-Random -count 3) -join ''
-
-    $passwordarray = $password.tochararray() 
-    $scrambledpassword = ($passwordarray | Get-Random -Count 20) -join ''
-    $scrambledpassword
-}
 
 Start-Transcript $LogTS | Out-Null
 
@@ -129,29 +131,54 @@ Try {
          
     Copy-Item -Path ".\DefaultUser\NTUSER.DAT" -Destination "C:\Users\Default\" -Force -Verbose -ErrorAction Stop
     Write-Log -Message 'Status: NTUSER.DAT copied to "C:\Users\Default\' -Severity Information
-    Write-Verbose "Modified NTUSER.dat copied" -Verbose
+    Write-Verbose "Modified NTUSER.dat copied" -Verbose  
+
 
     ######################################
     #CREATE LOCAL USER
     ######################################
-    New-LocalUser -Name $DefaultUsername -AccountNeverExpires:$true -UserMayNotChangePassword:$true -PasswordNeverExpires:$true -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -FullName $DefaultUsername -Description "Local KIOSK User" -ErrorAction Stop -Verbose
-    Write-Log -Message 'Status: KIOSK User created successfully' -Severity Information
-    Write-Verbose "User: $DefaultUsername was created" -Verbose
-     
-    Set-ItemProperty $RegPath "AutoAdminLogon" -Value "1" -type String -ErrorAction Stop -Verbose
-    Write-Log -Message 'Status: AutoAdminLogin is set to: 1' -Severity Information
-    Write-Verbose "AutoAdminLogon enabled" -Verbose
+ } if (Get-LocalUser -Name 'KIOSK') {
+        Write-Host 'User Found, creating new password'
+   
+        Set-LocalUser -Name KIOSK -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -Verbose -ErrorAction Stop
+        Write-Log -Message 'Status: KIOSK is happy with it's new passw0rd' -Severity Information
+        Write-Verbose "User: 'KIOSK' is happy with it's new passw0rd. " -Verbose
 
-    Set-ItemProperty $RegPath "DefaultUsername" -Value ".\$DefaultUsername" -type String  -ErrorAction Stop -Verbose
-    Write-Log -Message 'Status: DefaultUserName is set to KIOSK in registry' -Severity Information
-    Write-Verbose "$DefaultUsername is set as Defaultusername" -Verbose
+        Set-ItemProperty $RegPath "AutoAdminLogon" -Value "1" -type String -ErrorAction Stop -Verbose
+        Write-Verbose "Making sure AutoAdminLogon is set to '1' " -Verbose
 
-    Set-ItemProperty $RegPath "DefaultPassword" -Value "$scrambledpassword" -type String -ErrorAction Stop -Verbose
-    Write-Log -Message 'Status: DefaultPassw0rd is set in registry' -Severity Information
-    Write-Verbose "DefaultPassword is set" -Verbose
+        Set-ItemProperty $RegPath "DefaultUsername" -Value ".\$DefaultUsername" -type String  -ErrorAction Stop -Verbose
+        Write-Verbose "Making sure $DefaultUsername is configured in registry" -Verbose
 
-    Write-Log -Message 'Status: KIOSK is configured for AutoLogon' -Severity Information
-    Write-host "CreateUser Configuration finish" -Verbose -BackgroundColor Black -ForegroundColor Green
+        Set-ItemProperty $RegPath "DefaultPassword" -Value "$scrambledpassword" -type String -ErrorAction Stop -Verbose
+        Write-Verbose "Making sure DefaultPassword key is configured in registry" -Verbose
+
+
+    }
+    else {
+
+        #Create local user for KIOSK
+        New-LocalUser -Name $DefaultUsername -AccountNeverExpires:$true -UserMayNotChangePassword:$true -PasswordNeverExpires:$true -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -FullName $DefaultUsername -Description "Local KIOSK User" -ErrorAction Stop -Verbose
+        Write-Log -Message 'Status: KIOSK User created successfully' -Severity Information
+        Write-Verbose "User: $DefaultUsername was created" -Verbose
+         
+        Set-ItemProperty $RegPath "AutoAdminLogon" -Value "1" -type String -ErrorAction Stop -Verbose
+        Write-Log -Message 'Status: AutoAdminLogin is set to: 1' -Severity Information
+        Write-Verbose "AutoAdminLogon enabled" -Verbose
+    
+        Set-ItemProperty $RegPath "DefaultUsername" -Value ".\$DefaultUsername" -type String  -ErrorAction Stop -Verbose
+        Write-Log -Message 'Status: DefaultUserName is set to KIOSK in registry' -Severity Information
+        Write-Verbose "$DefaultUsername is set as Defaultusername" -Verbose
+    
+        Set-ItemProperty $RegPath "DefaultPassword" -Value "$scrambledpassword" -type String -ErrorAction Stop -Verbose
+        Write-Log -Message 'Status: DefaultPassw0rd is set in registry' -Severity Information
+        Write-Verbose "DefaultPassword is set" -Verbose
+    
+        Write-Log -Message 'Status: KIOSK is configured for AutoLogon' -Severity Information
+        Write-host "CreateUser Configuration finish" -Verbose -BackgroundColor Black -ForegroundColor Green
+    }
+
+}
        
     ######################################
     #Create detectionmethod for MEM
@@ -164,18 +191,12 @@ Try {
 
     Exit 0      
 }
-    
 Catch {
     Write-Log -Message 'Status: Something went wrong, check log file for more information C:\Sarpsborg kommune\Logs' -Severity Error
     Write-Host "Someting went wrong, see logfile ($LogTS)  for more information" -BackgroundColor Black -ForegroundColor Red -Verbose
     Write-Error "$_"
-               
-    Exit 1
-    
-}
-    
-Finally {
-      
-}
 
-Stop-Transcript
+    Exit 1
+
+}
+ Stop-Transcript
