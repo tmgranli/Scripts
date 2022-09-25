@@ -150,7 +150,7 @@ Try {
     Write-Log -Message 'Status: DefaultPassw0rd is set in registry' -Severity Information
     Write-Verbose "DefaultPassword is set" -Verbose
 
-    Write-Log -Message 'Status: 'KIOSK' is configured for AutoLogon' -Severity Information
+    Write-Log -Message 'Status: KIOSK is configured for AutoLogon' -Severity Information
     Write-host "CreateUser Configuration finish" -Verbose -BackgroundColor Black -ForegroundColor Green
        
     ######################################
@@ -177,4 +177,5 @@ Catch {
 Finally {
       
 }
+
 Stop-Transcript
