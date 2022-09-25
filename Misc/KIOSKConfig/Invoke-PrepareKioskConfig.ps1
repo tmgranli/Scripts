@@ -66,7 +66,7 @@ function Write-Log {
 #Variables
 $LogTS = "C:\Sarpsborg kommune\Logs\Invoke-PrepareKioskConfig-Transcript.log"
 $LogPath = "C:\Sarpsborg kommune\Logs\Invoke-PrepareKioskConfig.log"
-$DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_108.txt'
+$DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_109.txt'
 $DefaultUsername = "KIOSK"
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
