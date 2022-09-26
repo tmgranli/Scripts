@@ -36,6 +36,7 @@ Step 5:
     1.0.7 - (2022-09-25) Changed the way files are copied to GroupPolicy/GroupPolicyUsers
     1.0.8 - (2022-09-25) Addded PS lines to configure for sysnative ( https://call4cloud.nl/2021/05/the-sysnative-witch-project ).
     1.0.9 - (2022-09-25) Added CreateUser, password scrambler, logging and source information.
+    1.1.0 - (2022-09-26) Added different logic to create user section
 #>    
 #Functions
 function Get-TimeStamp {
