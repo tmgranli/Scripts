@@ -138,8 +138,9 @@ Try {
     #CREATE LOCAL USER
     ######################################
 
-    $UserExits = Get-LocalUser | Where-Object {$_.Name -eq "KIOSK"}
-    if (-not $UserExits) {
+    $op = Get-LocalUser | where-Object Name -eq "KIOSK" | Measure-Object
+
+    if ($op.Count -eq 1) {
 
         Write-Host 'User Found, creating new password'
    
