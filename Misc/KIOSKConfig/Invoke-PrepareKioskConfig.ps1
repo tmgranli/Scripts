@@ -36,7 +36,9 @@ Step 5:
     1.0.7 - (2022-09-25) Changed the way files are copied to GroupPolicy/GroupPolicyUsers
     1.0.8 - (2022-09-25) Addded PS lines to configure for sysnative ( https://call4cloud.nl/2021/05/the-sysnative-witch-project ).
     1.0.9 - (2022-09-25) Added CreateUser, password scrambler, logging and source information.
-    1.1.0 - (2022-09-26) Added different logic to create user section
+    1.1.1 - (2022-09-26) Added different logic to create user section
+    1.1.2 - (2022-09-26) Added new password generator function
+    
 #>    
 #Functions
 function Get-TimeStamp {
@@ -63,25 +65,17 @@ function Write-Log {
         Severity = $Severity
     } | Add-Content -Path $LogPath
 }
-function New-ScrambledPassword {
-    $uppercase = "ABCDEFGHKLMNOPRSTUVWXYZ".tochararray() 
-    $lowercase = "abcdefghiklmnoprstuvwxyz".tochararray() 
-    $number = "0123456789".tochararray() 
-    $special = "$%&/()=?}{@#*+!".tochararray() 
+function Get-RandomCharacters($length, $characters) {
+    $random = 10..$length | ForEach-Object { Get-Random -Maximum $characters.length }
+    $private:ofs=""
+    return [String]$characters[$random]
+}
 
-    For ($i = 0; $i -le 1; $i++) {
-
-        $password = ($uppercase | Get-Random -count 3) -join ''
-        $password += ($lowercase | Get-Random -count 10) -join ''
-        $password += ($number | Get-Random -count 3) -join ''
-        $password += ($special | Get-Random -count 3) -join ''
-
-        $passwordarray = $password.tochararray() 
-        $scrambledpassword = ($passwordarray | Get-Random -Count 20) -join ''
-        $scrambledpassword
-    
-    }
-    
+function Scramble-String([string]$inputString){     
+    $characterArray = $inputString.ToCharArray()   
+    $scrambledStringArray = $characterArray | Get-Random -Count $characterArray.Length     
+    $outputString = -join $scrambledStringArray
+    return $outputString 
 }
 
 #Variables
@@ -90,6 +84,13 @@ $LogPath = "C:\Sarpsborg kommune\Logs\Invoke-PrepareKioskConfig.log"
 $DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_109.txt'
 $DefaultUsername = "KIOSK"
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
+
+
+$password = Get-RandomCharacters -length 5 -characters 'abcdefghiklmnoprstuvwxyz'
+$password += Get-RandomCharacters -length 1 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
+$password += Get-RandomCharacters -length 1 -characters '1234567890'
+$password += Get-RandomCharacters -length 1 -characters '!"§$%&/()=?}][{@#*+'
+$password = Scramble-String $password
 
 Start-Transcript $LogTS | Out-Null
 
@@ -145,7 +146,7 @@ Try {
 
         Write-Host 'User Found, creating new password'
    
-        Set-LocalUser -Name KIOSK -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -Verbose -ErrorAction Stop
+        Set-LocalUser -Name 'KIOSK' -Password ( ConvertTo-SecureString -AsPlainText -Force $password ) -Verbose -ErrorAction Stop
         Write-Log -Message 'Status: KIOSK is happy with the new passw0rd' -Severity Information
         Write-Verbose "User: 'KIOSK' is happy with it's new passw0rd. " -Verbose
 
@@ -155,7 +156,7 @@ Try {
         Set-ItemProperty $RegPath "DefaultUsername" -Value ".\$DefaultUsername" -type String  -ErrorAction Stop -Verbose
         Write-Verbose "Making sure $DefaultUsername is configured in registry" -Verbose
 
-        Set-ItemProperty $RegPath "DefaultPassword" -Value "$scrambledpassword" -type String -ErrorAction Stop -Verbose
+        Set-ItemProperty $RegPath "DefaultPassword" -Value "$password" -type String -ErrorAction Stop -Verbose
         Write-Verbose "Making sure DefaultPassword key is configured in registry" -Verbose
 
     } 
@@ -163,7 +164,7 @@ Try {
     else {
 
         #Create local user for KIOSK
-        New-LocalUser -Name $DefaultUsername -AccountNeverExpires:$true -UserMayNotChangePassword:$true -PasswordNeverExpires:$true -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -FullName $DefaultUsername -Description "Local KIOSK User" -ErrorAction Stop -Verbose
+        New-LocalUser -Name $DefaultUsername -AccountNeverExpires:$true -UserMayNotChangePassword:$true -PasswordNeverExpires:$true -Password ( ConvertTo-SecureString -AsPlainText -Force $password ) -FullName $DefaultUsername -Description "Local KIOSK User" -ErrorAction Stop -Verbose
         Write-Log -Message 'Status: KIOSK User created successfully' -Severity Information
         Write-Verbose "User: $DefaultUsername was created" -Verbose
          
@@ -175,7 +176,7 @@ Try {
         Write-Log -Message 'Status: DefaultUserName is set to KIOSK in registry' -Severity Information
         Write-Verbose "$DefaultUsername is set as Defaultusername" -Verbose
     
-        Set-ItemProperty $RegPath "DefaultPassword" -Value "$scrambledpassword" -type String -ErrorAction Stop -Verbose
+        Set-ItemProperty $RegPath "DefaultPassword" -Value "$password" -type String -ErrorAction Stop -Verbose
         Write-Log -Message 'Status: DefaultPassw0rd is set in registry' -Severity Information
         Write-Verbose "DefaultPassword is set" -Verbose
     
