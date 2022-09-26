@@ -137,11 +137,14 @@ Try {
     ######################################
     #CREATE LOCAL USER
     ######################################
- } if (Get-LocalUser -Name 'KIOSK') {
+
+    $UserExits = Get-LocalUser | Where-Object {$_.Name -eq "KIOSK"}
+    if (-not $UserExits) {
+
         Write-Host 'User Found, creating new password'
    
         Set-LocalUser -Name KIOSK -Password ( ConvertTo-SecureString -AsPlainText -Force $scrambledpassword ) -Verbose -ErrorAction Stop
-        Write-Log -Message 'Status: KIOSK is happy with it's new passw0rd' -Severity Information
+        Write-Log -Message 'Status: KIOSK is happy with the new passw0rd' -Severity Information
         Write-Verbose "User: 'KIOSK' is happy with it's new passw0rd. " -Verbose
 
         Set-ItemProperty $RegPath "AutoAdminLogon" -Value "1" -type String -ErrorAction Stop -Verbose
@@ -153,8 +156,8 @@ Try {
         Set-ItemProperty $RegPath "DefaultPassword" -Value "$scrambledpassword" -type String -ErrorAction Stop -Verbose
         Write-Verbose "Making sure DefaultPassword key is configured in registry" -Verbose
 
+    } 
 
-    }
     else {
 
         #Create local user for KIOSK
@@ -176,9 +179,9 @@ Try {
     
         Write-Log -Message 'Status: KIOSK is configured for AutoLogon' -Severity Information
         Write-host "CreateUser Configuration finish" -Verbose -BackgroundColor Black -ForegroundColor Green
-    }
 
-}
+    }
+    
        
     ######################################
     #Create detectionmethod for MEM
@@ -189,14 +192,14 @@ Try {
     Write-Log -Message 'Status: KIOSK configration completed' -Severity Information
     Write-host "KIOSK configration completed" -Verbose -BackgroundColor Cyan -ForegroundColor Black
 
-    Exit 0      
-}
+    Exit 0  
+}    
 Catch {
     Write-Log -Message 'Status: Something went wrong, check log file for more information C:\Sarpsborg kommune\Logs' -Severity Error
     Write-Host "Someting went wrong, see logfile ($LogTS)  for more information" -BackgroundColor Black -ForegroundColor Red -Verbose
     Write-Error "$_"
 
     Exit 1
-
 }
- Stop-Transcript
+
+Stop-Transcript

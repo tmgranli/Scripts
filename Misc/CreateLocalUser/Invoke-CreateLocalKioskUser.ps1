@@ -19,7 +19,25 @@
     1.0.2 - (2022-04-09) Added logic to detect if user exist or needs to be created.
     1.0.3 - (2022-09-23) Updated detectionmethod.
 #>    
-
+function Write-Log {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message,
+ 
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet('Information', 'Warning', 'Error')]
+        [string]$Severity = 'Information'
+    )
+ 
+    [pscustomobject]@{
+        Time     = (Get-Date -f g)
+        Message  = $Message
+        Severity = $Severity
+    } | Add-Content -Path $LogPath
+}
 # Random Password Generator
 
 $uppercase = "ABCDEFGHKLMNOPRSTUVWXYZ".tochararray() 
