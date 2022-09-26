@@ -2,7 +2,10 @@
 .SYNOPSIS
     Invoke Kiosk Config
 .DESCRIPTION
-This script will invoke the KIOSK Config process and prepare the device for using with an autologon user. 
+What does it do ?: 
+
+1. Copies custom GPO to local gpo folders
+2. creates kiosk user if not exist.
 
 This script is based the following blogs:
 How to create the GPO for non administrators - (Step 2): https://msendpointmgr.com/2018/10/27/building-a-shared-pc-mode-kiosk-with-microsoft-intune/ 
@@ -81,7 +84,7 @@ function Scramble-String([string]$inputString){
 #Variables
 $LogTS = "C:\Sarpsborg kommune\Logs\Invoke-PrepareKioskConfig-Transcript.log"
 $LogPath = "C:\Sarpsborg kommune\Logs\Invoke-PrepareKioskConfig.log"
-$DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_109.txt'
+$DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskConfigCompleted_112.txt'
 $DefaultUsername = "KIOSK"
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
