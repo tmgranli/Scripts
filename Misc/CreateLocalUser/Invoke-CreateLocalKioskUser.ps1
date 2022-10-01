@@ -17,8 +17,27 @@
     Version history:
     1.0.1 - (2022-04-09) Script created
     1.0.2 - (2022-04-09) Added logic to detect if user exist or needs to be created.
+    1.0.3 - (2022-09-23) Updated detectionmethod.
 #>    
-
+function Write-Log {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [string]$Message,
+ 
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet('Information', 'Warning', 'Error')]
+        [string]$Severity = 'Information'
+    )
+ 
+    [pscustomobject]@{
+        Time     = (Get-Date -f g)
+        Message  = $Message
+        Severity = $Severity
+    } | Add-Content -Path $LogPath
+}
 # Random Password Generator
 
 $uppercase = "ABCDEFGHKLMNOPRSTUVWXYZ".tochararray() 
@@ -47,7 +66,7 @@ function Get-TimeStamp {
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 $DefaultUsername = "KIOSK"
 $ConfigLog = 'C:\Sarpsborg kommune\Logs\Log-KioskUserConfig.txt'
-$DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskUserCreated_v1.txt'
+$DetectionMethod = 'C:\Sarpsborg kommune\DetectionMethod\KioskUserCreated_v3.txt'
 
 Try {
 

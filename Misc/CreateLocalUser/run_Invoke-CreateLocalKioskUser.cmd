@@ -1,0 +1,1 @@
+powershell -executionpolicy bypass -file Invoke-CreateLocalKioskUser.ps1
