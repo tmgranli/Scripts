@@ -72,6 +72,18 @@ Write-host "Read variables" -Verbose -BackgroundColor Cyan -ForegroundColor Blac
 
 Try {
 
+$wlaninterface = Get-NetAdapter 
+
+
+    If($wlaninterface | where{$_.Name -eq "Wrong Process"} -EA Ignore){
+        Write-Output "Process exist"
+        }
+        else{
+        Write-Output "Process Doesn't Exist"
+        }
+
+
+
     #Update drivers
 
     New-Item -Path "c:\" -Name "temp" -ItemType "directory" -force -Verbose -ErrorAction Stop
