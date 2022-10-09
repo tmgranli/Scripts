@@ -1,0 +1,5 @@
+
+
+$zonename = 
+$Computername = 
+Import-Csv .\arecords.csv | foreach{Add-DnsServerResourceRecordA -Name $_.name -ZoneName  -IPv4Address $_.ip -ComputerName DC01 }
