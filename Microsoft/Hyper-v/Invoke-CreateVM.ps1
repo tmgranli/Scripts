@@ -5,7 +5,7 @@
     This script will invoke the KIOSK Config process and prepare the device for using with an autologgon user. 
   
 .EXAMPLE
-    .\Invoke-UpdateDriver.ps1
+    .\Invoke-CreateVM
 .NOTES
     FileName:    Invoke-PrepareKioskConfig.ps1
     Author:      Truls Granli
