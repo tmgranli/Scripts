@@ -16,6 +16,7 @@ powershell -executionpolicy bypass -file Invoke-Install-Symwriter-and-inprint.ps
     
     Version history:
     1.0.0 - (2022-10-25) Script created
+    1.0.1 - (2022-11-21) Added Uninstall method.
 #>    
 
 function Get-TimeStamp {
@@ -70,6 +71,28 @@ Write-host "Read variables" -Verbose -BackgroundColor Cyan -ForegroundColor Blac
 
 
 Try {
+
+    #### Uninstall old version
+    $App1 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Communicate: SymWriter" }
+    $App1.uninstall()
+
+    $App2 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit English UK Speech Pack" }
+    $App2.uninstall()
+
+    $App3 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Norsk talesyntese" }
+    $App3.uninstall()
+
+    $App4 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Symboliserer" }
+    $App4.uninstall()
+
+    $App5 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit SymWriter Ressurser Engelsk" }
+    $App5.uninstall()
+
+    $App6 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit SymWriter Ressurser Norsk" }
+    $App6.uninstall()
+    
+    
+    ####
 
     Start-Process msiexec.exe -Wait -ArgumentList '/i core.msi /qb' -Verbose -ErrorAction Stop   # Med lisensnøkkel
     Write-LogEntry -Stamp -Value "Core service for Symwriter and inPrinter has been successfully installed"
