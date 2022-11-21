@@ -90,7 +90,15 @@ Try {
 
     $App6 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit SymWriter Ressurser Norsk" }
     $App6.uninstall()
+
+    $App7 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit InPrint" }
+    $App7.uninstall()
     
+    $App8 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit InPrint Resources NO" }
+    $App8.uninstall()
+    
+    $App9 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Wordlist Manager" }
+    $App9.uninstall()
     
     ####
 
