@@ -31,7 +31,7 @@ function Write-LogEntry {
         [string]$Value,
         [parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
-        [string]$FileName = "Driver.log",
+        [string]$FileName = "sym-inprint-installation.log",
         [switch]$Stamp
     )
 
@@ -63,43 +63,28 @@ Write-LogEntry -Value "##################################"
 #Prepare logging and error handling
 clear-host
 $StartDTM = (Get-Date)
-$LogPS = "C:\Sarpsborg kommune\Logs\Transcript-Log.log"
+$LogPS = "C:\Sarpsborg kommune\Logs\sym-inprint-transcript.log"
 Start-Transcript $LogPS | Out-Null
     
 #Needed variables
+Write-host "Read variables" -Verbose -BackgroundColor Cyan -ForegroundColor Black
+Install-PackageProvider -Name "NuGet" -MinimumVersion 2.8.5.201 -Force -Verbose
 Write-host "Read variables" -Verbose -BackgroundColor Cyan -ForegroundColor Black
 
 
 Try {
 
-    #### Uninstall old version
-    $App1 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Communicate: SymWriter" }
-    $App1.uninstall()
+    Get-Package -Name "Widgit Norsk talesyntese" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
+    Get-Package -Name "Widgit Communicate: SymWriter" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
+    Get-Package -Name "Widgit SymWriter Ressurser Norsk" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
+    Get-Package -Name "Widgit SymWriter Ressurser Engelsk" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose      
+    Get-Package -Name "Widgit Wordlist Manager" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
+    Get-Package -Name "Widgit English UK Speech Pack" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
+    Get-Package -Name "Widgit InPrint Resources NO" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
+    Get-Package -Name "Widgit InPrint" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
+    Get-Package -Name "Widgit Symboliserer" | Uninstall-Package -ErrorAction SilentlyContinue -Verbose
 
-    $App2 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit English UK Speech Pack" }
-    $App2.uninstall()
 
-    $App3 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Norsk talesyntese" }
-    $App3.uninstall()
-
-    $App4 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Symboliserer" }
-    $App4.uninstall()
-
-    $App5 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit SymWriter Ressurser Engelsk" }
-    $App5.uninstall()
-
-    $App6 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit SymWriter Ressurser Norsk" }
-    $App6.uninstall()
-
-    $App7 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit InPrint" }
-    $App7.uninstall()
-    
-    $App8 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit InPrint Resources NO" }
-    $App8.uninstall()
-    
-    $App9 = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Widgit Wordlist Manager" }
-    $App9.uninstall()
-    
     ####
 
     Start-Process msiexec.exe -Wait -ArgumentList '/i core.msi /qb' -Verbose -ErrorAction Stop   # Med lisensnøkkel
