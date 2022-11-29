@@ -69,7 +69,7 @@ Start-Transcript $LogPS | Out-Null
 #Needed variables
 Write-host "Read variables" -Verbose -BackgroundColor Cyan -ForegroundColor Black
 Install-PackageProvider -Name "NuGet" -MinimumVersion 2.8.5.201 -Force -Verbose
-Write-host "Read variables" -Verbose -BackgroundColor Cyan -ForegroundColor Black
+Write-host "NuGet installed" -Verbose -BackgroundColor Cyan -ForegroundColor Black
 
 
 Try {
