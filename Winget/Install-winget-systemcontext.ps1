@@ -13,7 +13,7 @@ New-Item -Path $InstallerFolder -ItemType Directory -Force -Confirm:$false
 	#Check Winget Install
 	Write-Host "Checking if Winget is installed" -ForegroundColor Yellow
 	$TestWinget = Get-AppxProvisionedPackage -Online | Where-Object {$_.DisplayName -eq "Microsoft.DesktopAppInstaller"}
-	If ([Version]$TestWinGet. Version -gt "2022.506.16.0") 
+	If ([Version]$TestWinGet. Version -gt "2022.927.3.0") 
 	{
 		Write-Host "WinGet is Installed" -ForegroundColor Green
 	}Else 
