@@ -2,7 +2,7 @@
 .SYNOPSIS
     
 .DESCRIPTION
-This script will create an scheduletask that triggers intune sync when a user logs on.
+This script Checks if TaskSchedule exist, if not exist create. 
   
 .EXAMPLE  
 powershell -executionpolicy bypass -file invoke-create-scheduletask-intune-sync.ps1
