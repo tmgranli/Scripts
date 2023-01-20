@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Username and Password to create
-username=dilldalladmin
+username=localadmin
 password="klient15klient15"
 # Create User and add to admins
 dscl . -create /Users/$username
