@@ -12,7 +12,7 @@ else
 	${plistBuddy} -c "add :'Palo Alto Networks' dict" ${GPplistFile}
 	${plistBuddy} -c "add :'Palo Alto Networks':'GlobalProtect' dict" ${GPplistFile}
 	${plistBuddy} -c "add :'Palo Alto Networks':'GlobalProtect':'PanSetup' dict" ${GPplistFile}
-	${plistBuddy} -c "add :'Palo Alto Networks':'GlobalProtect':'PanSetup':'Portal' string 'portal.paloalto.com'" ${GPplistFile}
+	${plistBuddy} -c "add :'Palo Alto Networks':'GlobalProtect':'PanSetup':'Portal' string 'portal.domene.no'" ${GPplistFile}
 	${plistBuddy} -c "add :'Palo Alto Networks':'GlobalProtect':'PanSetup':'Prelogon' integer 0" ${GPplistFile}
 fi
 	
