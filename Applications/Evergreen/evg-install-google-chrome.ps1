@@ -73,13 +73,13 @@ Write-Verbose "Starting Installation of $Vendor $Product $Version" -Verbose
 
 
 $RegistryPath = "HKLM:\SOFTWARE\Toll\IntuneApps\Installed\Google_Chrome" #Pek til ønsket lokasjon i registry
-$RegistryName = "Version" #Skriv inn ønsket navn på "Value".
-#$RegistryValue = "1" #Skriv inn ønsket "Data Value"
+$RegistryName = "LatestVersionInstalled" #Skriv inn ønsket navn på "Value".
+$RegistryValue = "1" #Skriv inn ønsket "Data Value"
 
 New-Item -Path $RegistryPath -ErrorAction SilentlyContinue -Verbose -Force
 New-ItemProperty    -Path $RegistryPath `
                     -Name $RegistryName `
-                    -Value $Version `
+                    -Value $RegistryValue `
                     -PropertyType String `
                     -Force `
                     -Verbose | Out-Null
