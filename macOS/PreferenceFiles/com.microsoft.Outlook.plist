@@ -1,0 +1,14 @@
+	<key>AllowedEmailDomains</key>
+	<string>toll.no</string>
+	<key>EnableNewOutlook</key>
+	<integer>2</integer>
+	<key>HideCanAddOtherAccountTypesTipText</key>
+	<true/>
+	<key>AutomaticallyDownloadExternalContent</key>
+	<integer>1</integer>
+	<key>CalendarFirstDayOfWeek</key>
+	<integer>2</integer>
+	<key>DisableExport</key>
+	<true/>
+	<key>DisableImport</key>
+	<true/>

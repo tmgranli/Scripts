@@ -70,6 +70,22 @@ If (!(Test-Path -Path $Source)) {
 Write-Verbose "Starting Installation of $Vendor $Product $Version" -Verbose
 (Start-Process msiexec.exe -ArgumentList $UnattendedArgs -Wait -Passthru).ExitCode
 
+
+
+$RegistryPath = "HKLM:\SOFTWARE\Toll\IntuneApps\Installed\Google_Chrome" #Pek til ønsket lokasjon i registry
+$RegistryName = "LatestVersionInstalled" #Skriv inn ønsket navn på "Value".
+$RegistryValue = "1" #Skriv inn ønsket "Data Value"
+
+New-Item -Path $RegistryPath -ErrorAction SilentlyContinue -Verbose -Force
+New-ItemProperty    -Path $RegistryPath `
+                    -Name $RegistryName `
+                    -Value $RegistryValue `
+                    -PropertyType String `
+                    -Force `
+                    -Verbose | Out-Null
+Get-ItemProperty $RegistryPath | Select-Object $RegistryName -Verbose
+
+
 Write-Verbose "Customization" -Verbose
 #sc.exe config gupdate start= disabled
 #sc.exe config gupdatem start= disabled

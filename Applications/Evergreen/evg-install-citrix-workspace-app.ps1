@@ -20,7 +20,7 @@ $Source = "$PackageName" + "." + "$InstallerType"
 $LogPS = "${env:SystemRoot}" + "\Temp\$Vendor $Product $Version PS Wrapper.log"
 $LogApp = "${env:SystemRoot}" + "\Temp\$PackageName.log"
 $Destination = "${env:ChocoRepository}" + "\$Vendor\$Product\$Version\$packageName.$installerType"
-$UnattendedArgs = '/silent /includeSSON /forceinstall /AutoUpdateCheck=disabled /noreboot'
+$UnattendedArgs = '/silent /includeSSON /noreboot /EnableCEIP=false /AutoUpdateCheck=disabled ALLOWADDSTORE=N /forceinstall'
 $download = Invoke-WebRequest -UseBasicParsing -Uri ("https://www.citrix.com/downloads/workspace-app/windows/workspace-app-for-windows-latest.html") -SessionVariable websession
 $version = $download.RawContent | Select-String '(?<=.*<p>Version:&nbsp;).+?(?=<\/p>.*)' -AllMatches | ForEach-Object { $_.Matches.Value } | Select-Object -Unique
 $href = $download.Links|Where-Object {$_.rel -like "*CitrixWorkspaceApp.exe*"}
