@@ -1,0 +1,20 @@
+﻿##Deletes all files with the follow .extension
+
+$path = '\\192.168.1.125\Plex\Movies\*'
+Remove-Item $path -Recurse -Include *.png -Verbose
+Remove-Item $path -Recurse -Include *.srt -Verbose
+Remove-Item $path -Recurse -Include *.nfo -Verbose
+Remove-Item $path -Recurse -Include *.torrent -Verbose
+Remove-Item $path -Recurse -Include *.sub -Verbose
+Remove-Item $path -Recurse -Include *.idx -Verbose
+Remove-Item $path -Recurse -Include *.jpg -Verbose
+Remove-Item $path -Recurse -Include *.sfv -Verbose
+Remove-Item $path -Recurse -Include *.txt -Verbose
+Remove-Item $path -Recurse -Include *.ass  -Verbose
+
+
+
+
+##Reports all folders with more than X files in it
+cd \\192.168.1.125\Plex\Movies
+Get-ChildItem | Where-Object { @(Get-ChildItem $_).count -gt 2} 
