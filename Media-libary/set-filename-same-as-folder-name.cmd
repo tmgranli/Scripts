@@ -1,3 +1,5 @@
+#Stop
+
 @Echo OFF
 
 FOR /D /R %%# in (*) DO (
