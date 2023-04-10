@@ -1,0 +1,73 @@
+<hta:application 
+  id="splashscreen" 
+  applicationname="Splash Screen" 
+  version="1.0" 
+  border="none" 
+  innerborder="no" 
+  caption="no" 
+  maximizebutton="no" 
+  minimizebutton="no" 
+  sysmenu="no" 
+  icon="C:\path\to\your\icon.ico">
+
+  <head>
+    <title>Splash Screen</title>
+    <hta:stylesheet type="text/css">
+      body { margin: 0; padding: 0; background-image: url('"C:\Users\tmgra\OneDrive\Pictures\wallhaven-o5gpp5.jpg"'); background-size: cover; }
+      #loading { 
+        position: absolute; 
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%); 
+        color: white; 
+        font-size: 24px;
+        font-family: Arial, sans-serif; 
+        text-align: center;
+      }
+      #circle { 
+        position: absolute; 
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%);
+        width: 100px; 
+        height: 100px; 
+        background-color: rgba(255, 255, 255, 0.4); 
+        border-radius: 50%; 
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); 
+        overflow: hidden;
+      }
+      #circle .fill { 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 50%; 
+        height: 100%; 
+        background-color: #0066CC; 
+        border-radius: 50% 0 0 50%; 
+        transform-origin: 100% 50%; 
+        transform: rotate(0deg);
+        animation: fill 5s linear forwards; 
+      }
+      @keyframes fill { 
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    </hta:stylesheet>
+  </head>
+
+  <body>
+    <div id="loading">
+      Loading...
+    </div>
+    <div id="circle">
+      <div class="fill"></div>
+    </div>
+    <script type="text/javascript">
+      function CloseSplashScreen() {
+        window.close();
+      }
+
+      setTimeout(CloseSplashScreen, 5000);
+    </script>
+  </body>
+</hta:application>

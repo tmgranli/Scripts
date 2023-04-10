@@ -1,7 +1,8 @@
 ﻿##Deletes all files with the follow .extension
 
-#$path = '\\192.168.1.125\Plex\Movies\*'
-$path = '\\192.168.1.125\Plex\Series\*'
+#$path = '\\192.168.50.201\Plex\Movies\*'
+#$path = '\\192.168.50.125\Plex\Series\*'
+$path = '\\192.168.50.201\Plex\leechonly\_sortering\*'
 
 
 Remove-Item $path -Recurse -Include *.png -Verbose
@@ -14,10 +15,15 @@ Remove-Item $path -Recurse -Include *.jpg -Verbose
 Remove-Item $path -Recurse -Include *.sfv -Verbose
 Remove-Item $path -Recurse -Include *.txt -Verbose
 Remove-Item $path -Recurse -Include *.ass  -Verbose
-
+#Remove-Item $path -Recurse -Include *.r* -Verbose
 
 
 
 ##Lists all folders with more than X files in it
-cd \\192.168.1.125\Plex\Movies
-Get-ChildItem | Where-Object { @(Get-ChildItem $_).count -gt 2} 
+cd \\192.168.50.201\Plex\Movies
+Get-ChildItem | Where-Object { @(Get-ChildItem $_).count -gt 2}
+Get-ChildItem -Exclude *.*.srt | Where-Object { @(Get-ChildItem $_).count -gt 2}
+
+
+## Copy all files and folders
+robocopy E:\Download\incomplete \\192.168.50.201\Plex\leechonly\_sortering /E /DCOPY:DAT /R:10 /W:3 
