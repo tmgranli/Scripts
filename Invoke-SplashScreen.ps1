@@ -1,102 +1,115 @@
-# Load the necessary .NET assemblies for Windows Forms
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Windows.Forms.VisualStyles
+# Import the necessary WPF assemblies
+Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName PresentationCore
+Add-Type -AssemblyName WindowsBase
 
-# Define a function to hide the taskbar
-function Hide-Taskbar {
-    $shell = New-Object -ComObject Shell.Application
-    $taskbar = $shell.ServiceLeftPane
-    $taskbar.AutoHideTaskbar($true)
+# Set the path to the image file for the splash screen
+$imagePath = "C:\path\image.png"
+
+# Set the path to the check mark image file
+$checkMarkPath = "C:\path\check.png"
+
+# Define the paths to check for
+$pathsToCheck = @{
+    "RegistryKey" = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome",
+    "Folder" = "C:\Program Files\Google\Chrome",
+    "File" = "C:\Program Files\Google\Chrome\Application\chrome.exe"
 }
 
-try {
-    # Hide the taskbar
-    Hide-Taskbar
 
-    # Set the path to the image file for the splash screen
-    $imagePath = "C:\path\to\image.png"
 
-    # Set the path to the check mark image file
-    $checkMarkPath = "C:\path\to\check.png"
+# Create a new WPF window for the splash screen
+$splashScreen = New-Object System.Windows.Window
+$splashScreen.SizeToContent = "WidthAndHeight"
+$splashScreen.WindowStyle = "ToolWindow"
+$splashScreen.Background = New-Object System.Windows.Media.SolidColorBrush([System.Windows.Media.Color]::FromArgb(0, 0, 0, 0))
 
-    # Set the paths to check for
-    $pathsToCheck = @(
-        "HKLM:\path\to\registry\key",
-        "C:\path\to\folder",
-        "C:\path\to\file.txt"
-    )
+# Load the image and set it as the content of the window
+$image = [System.Windows.Media.Imaging.BitmapImage]::new()
+$image.BeginInit()
+$image.UriSource = [System.Uri]::new($imagePath)
+$image.EndInit()
+$imageControl = New-Object System.Windows.Controls.Image
+$imageControl.Source = $image
+$splashScreen.Content = $imageControl
 
-    # Create a new Windows form for the splash screen
-    $form = New-Object System.Windows.Forms.Form
-    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::None
-    $form.WindowState = [System.Windows.Forms.FormWindowState]::Maximized
-    $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
-    $form.BackgroundImage = [System.Drawing.Image]::FromFile($imagePath)
-    $form.BackgroundImageLayout = [System.Windows.Forms.ImageLayout]::Stretch
+# Create a timer for the countdown
+$countdownSeconds = 10
+$timer = New-Object System.Windows.Threading.DispatcherTimer
+$timer.Interval = [TimeSpan]::FromSeconds(1)
+$timer.Add_Tick({
+    $countdownSeconds--
+    if ($countdownSeconds -eq 0) {
+        $timer.Stop()
+        $splashScreen.Close()
+    }
+})
 
-    # Hide the splash screen from the taskbar
-    $form.ShowInTaskbar = $false
-
-    # Disable the form's close button
-    $form.ControlBox = $false
-
-    # Hide the mouse cursor
-    $form.Cursor = [System.Windows.Forms.Cursors]::None
-
-    # Activate the form when it is shown
-    $form.Add_Shown({
-        $form.Activate()
-    })
-
-    # Create a timer for the countdown
-    $timer = New-Object System.Windows.Forms.Timer
-    $timer.Interval = 1000
-    $timer.Add_Tick({
-        # Update the countdown label here
-        if ($countdownSeconds -eq 0) {
-            # Close the form when the countdown is complete
-            $form.Close()
-        }
-        $countdownSeconds -= 1
-    })
-    $form.Controls.Add($timer)
+# Add the timer to the splash screen
+$splashScreen.Add_Loaded({
     $timer.Start()
+})
 
-    # Set the countdown time in seconds
-    $countdownSeconds = 10
+# Show the splash screen
+$splashScreen.WindowStartupLocation = "CenterScreen"
+$splashScreen.Show()
 
-    # Loop over each path to check
-    foreach ($path in $pathsToCheck) {
-        try {
-            # Check if the path exists
-            if (Test-Path $path) {
-                # Create a new picture box for the check mark
-                $check = New-Object System.Windows.Forms.PictureBox
-                $check.Image = [System.Drawing.Image]::FromFile($checkMarkPath)
-                $check.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::Zoom
-                $check.Width = 32
-                $check.Height = 32
-
-                # Set the position of the check mark based on the index of the path in the array
-                $check.Top = $form.ClientSize.Height - $check.Height - ($pathsToCheck.IndexOf($path) * 40) - 20
-                $check.Left = $form.ClientSize.Width - $check.Width - 20
-
-                # Add the check mark to the form
-                $form.Controls.Add($check)
+# Loop over each path type to check
+foreach ($pathType in $pathsToCheck.Keys) {
+    try {
+        # Check for the existence of registry keys, files, folders, and software
+        switch ($pathType) {
+            "RegistryKey" {
+                $appName = "Google Chrome"
+                if (Get-ItemProperty -Path $pathsToCheck[$pathType] -Name DisplayName -ErrorAction Stop) {
+                    Write-Output "$appName is installed"
+                }
+                else {
+                    Write-Output "$appName is not installed"
+                }
+            }
+            "Folder" {
+                if (Test-Path $pathsToCheck[$pathType]) {
+                    Write-Output "Folder $($pathsToCheck[$pathType]) exists"
+                }
+                else {
+                    Write-Output "Folder $($pathsToCheck[$pathType]) does not exist"
+                }
+            }
+            "File" {
+                if (Test-Path $pathsToCheck[$pathType]) {
+                    Write-Output "File $($pathsToCheck[$pathType]) exists"
+                }
+                else {
+                    Write-Output "File $($pathsToCheck[$pathType]) does not exist"
+                }
+            }
+            Default {
+                Write-Warning "Unknown path type: $pathType"
             }
         }
-        catch {
-            # Handle any errors that occur when checking the path
-            Write-Error "Error checking path $path: $_"
-        }
     }
-
-    #
-
-# Display the form and wait for it to be closed
-while ($form.IsHandleCreated) {
-    [System.Windows.Forms.Application]::DoEvents()
+    catch {
+        Write-Error "Error checking $pathType $($pathsToCheck[$pathType]): $_"
+    }
 }
 
-# Dispose of the form when it is closed
-$form.Dispose()
+# Show the splash screen
+$splashScreen.WindowStartupLocation = "CenterScreen"
+$splashScreen.Show()
+
+# Loop over each path to check
+foreach ($path in $pathsToCheck) {
+    try {
+        # Check if the path exists
+        if (Test-Path $path) {
+            Write-Output "Path $path exists"
+        }
+        else {
+            Write-Output "Path $path does not exist"
+        }
+    }
+    catch {
+     #   Write-Error "Error checking path $path: $_"
+    }
+}
